@@ -113,7 +113,7 @@ openssl version -d  # Output: OPENSSLDIR: "/usr/local/openssl"
 
 #### Update `/usr/local/openssl/openssl.cnf`:
 ```ini
-# Add if not presen
+# Add if not present
 openssl_conf = openssl_init
 
 [openssl_init]
