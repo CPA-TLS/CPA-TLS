@@ -147,7 +147,7 @@ Replace `<SELECTED_GROUPS>` with: `X25519MLKEM768`, `SecP256r1MLKEM768`, or `Sec
 
 The scripts generate Excel files (as shown in the `data` folder, containing raw experimental data used in this work).
 
-> **Important**: The scripts cannot automatically detect the MLKEM security version. The filename prefixes `CCA_` and `CPA_` were manually added after data generation to distinguish between CCA-secure and CPA-secure implementations.
+> **Important**: The scripts cannot automatically detect the ML-KEM security version. The filename prefixes `CCA_` and `CPA_` were manually added after data generation to distinguish between CCA-secure and CPA-secure implementations.
 
 All data files in the `data` folder represent the original measurements used in our paper analysis.
 
