@@ -37,8 +37,8 @@ sudo ldconfig
 
 # Add to PATH
 export PATH=/usr/local/openssl/bin:$PATH
-## You can add this line to your `~/.bashrc` or `~/.profile` file to
-## have it configured automatically each time you open a new terminal
+# You can add this line to your `~/.bashrc` or `~/.profile` file to
+# have it configured automatically each time you open a new terminal
 ```
 
 ### Verification
