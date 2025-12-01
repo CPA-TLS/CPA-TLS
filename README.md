@@ -1,6 +1,3 @@
-为您优化了README文件的结构和表述，使其更符合GitHub项目规范，同时保持了技术细节的准确性。
-
-```markdown
 # Experimental Code: TLS 1.3 Handshake with Hybrid Key Exchange from CPA-Secure KEMs
 
 This repository contains the implementation and testing code for our paper **"On the Security and Efficiency of TLS 1.3 Handshake with Hybrid Key Exchange from CPA-Secure KEMs"**.
@@ -37,9 +34,12 @@ sudo make install
 echo "/usr/local/openssl/lib64" | sudo tee -a /etc/ld.so.conf.d/openssl.conf
 sudo ldconfig
 
-# Add to PATH (add to ~/.bashrc for persistence)
-export PATH=/usr/local/openssl/bin:$PATH
+# Add to PATH (Optional)
+# To ensure the system uses the newly installed OpenSSL version, add the following line to your `~/.bashrc` or `~/.profile`:
+# export PATH=/usr/local/openssl/bin:$PATH
+# Then reload the shell configuration:
 source ~/.bashrc
+# or source ~/.profile
 ```
 
 ### Verification
@@ -52,23 +52,13 @@ openssl version
 
 To test with the CPA-secure ML-KEM variant:
 
-1. **Backup** the original implementation:
-   ```bash
-   cp /openssl-3.6.0/crypto/ml_kem/ml_kem.c /openssl-3.6.0/crypto/ml_kem/ml_kem.c.backup
-   ```
+1. **Backup** the original `ml_kem.c` in `/openssl-3.6.0/crypto/ml_kem/`.
 
-2. **Replace** with CPA-secure version from this repository:
-   ```bash
-   cp /path/to/this/repo/ml_kem_cpa.c /openssl-3.6.0/crypto/ml_kem/ml_kem.c
-   ```
+2. **Replace** the original `ml_kem.c` in `/openssl-3.6.0/crypto/ml_kem/` with the CPA-secure version `ml_kem.c` provided in this repository.
 
-3. **Recompile** OpenSSL:
-   ```bash
-   cd openssl-3.6.0
-   make && sudo make install
-   ```
+3. **Recompile** OpenSSL by repeating Step **Configure and compile** from the installation instructions.
 
-> **Note**: Restore the backup file and recompile to return to the CCA-secure version.
+> **Note**: To revert to the CCA-secure version, simply restore the backup file and recompile.
 
 ## 📊 Performance Evaluation
 
@@ -89,18 +79,25 @@ openssl req -new -x509 -sha256 -key server.key -out server.crt -days 365 -subj "
 ```
 
 #### 2. Start TLS Server
+In one terminal window:
 ```bash
-openssl s_server -cert server.crt -key server.key -accept 4443 -www -groups <SCHEME>
+openssl s_server -cert server.crt -key server.key -accept 4443 -www -groups <SELECTED_GROUPS>
 ```
+Replace `<SELECTED_GROUPS>` with: `X25519MLKEM768`, `SecP256r1MLKEM768`, or `SecP384r1MLKEM1024`.
 
 #### 3. Measure Handshake Performance
+In another terminal window:
 ```bash
 openssl s_time -connect localhost:4443 -new -time 3
 ```
 
 ## ⚙️ TLS Groups Configuration
 
-Enable support for all hybrid schemes in OpenSSL configuration:
+By default, `s_time` may not include `SecP256r1MLKEM768` and `SecP384r1MLKEM1024` in its supported TLS groups. You can either:
+
+1. **Replace** the existing `openssl.cnf` file at `/usr/local/openssl/` with the one provided in this repository, OR
+
+2. **Manually configure** supported TLS groups as follows (reference: [https://openssl-library.org/post/2022-10-21-tls-groups-configuration/](https://openssl-library.org/post/2022-10-21-tls-groups-configuration/)):
 
 #### Locate Configuration File
 ```bash
@@ -109,6 +106,7 @@ openssl version -d  # Output: OPENSSLDIR: "/usr/local/openssl"
 
 #### Update `/usr/local/openssl/openssl.cnf`:
 ```ini
+# Add if not presen
 openssl_conf = openssl_init
 
 [openssl_init]
@@ -121,25 +119,26 @@ system_default = tls_system_default
 Groups = X25519MLKEM768:SecP256r1MLKEM768:SecP384r1MLKEM1024
 ```
 
-> Alternatively, use the `openssl.cnf` file provided in this repository.
-
 ## 🤖 Automated Testing
+
+To ensure statistical significance, we conducted 50 test iterations for each scheme under both CCA-secure and CPA-secure MLKEM versions. Two Python scripts are provided for automated testing:
 
 ### Algorithm-Level Tests
 ```bash
 python3 runtime_KE.py <SCHEME>
 ```
+Replace `<SCHEME>` with: `X25519MLKEM768`, `SecP256r1MLKEM768`, or `SecP384r1MLKEM1024`.
 
 ### Protocol-Level Tests
 ```bash
-python3 runtime_HS_loop.py <SCHEME>
+python3 runtime_HS.py <SELECTED_GROUPS>
 ```
+Replace `<SELECTED_GROUPS>` with: `X25519MLKEM768`, `SecP256r1MLKEM768`, or `SecP384r1MLKEM1024`.
 
-Supported schemes: `X25519MLKEM768`, `SecP256r1MLKEM768`, `SecP384r1MLKEM1024`
 
 ## 📈 Results & Data
 
-- Raw experimental data is available in the `data/` directory
+- Raw experimental data in this work is available in the `data/` directory
 - Files are prefixed with `CCA_` or `CPA_` to indicate the security version
 - Data represents 50 iterations per configuration for statistical significance
 
