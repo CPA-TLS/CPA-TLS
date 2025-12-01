@@ -8,7 +8,6 @@ The project enables reproduction of the performance evaluation experiments compa
 
 - **Operating System**: Ubuntu 24.04 LTS
 - **Python**: Version 3.12.3
-- **OpenSSL**: 3.6.0 (compiled from source)
 
 ## 📥 OpenSSL Installation & Configuration
 
@@ -35,11 +34,12 @@ echo "/usr/local/openssl/lib64" | sudo tee -a /etc/ld.so.conf.d/openssl.conf
 sudo ldconfig
 
 # Add to PATH (Optional)
-# To ensure the system uses the newly installed OpenSSL version, add the following line to your `~/.bashrc` or `~/.profile`:
-# export PATH=/usr/local/openssl/bin:$PATH
-# Then reload the shell configuration:
-source ~/.bashrc
-# or source ~/.profile
+## To ensure the system uses the newly installed OpenSSL version, add the following line
+## to your `~/.bashrc` or `~/.profile`:
+## export PATH=/usr/local/openssl/bin:$PATH
+## Then reload the shell configuration:
+source ~/.bashrc # if the line is added to `~/.bashrc`
+## or source ~/.profile if the line is added to `~/.profile`
 ```
 
 ### Verification
