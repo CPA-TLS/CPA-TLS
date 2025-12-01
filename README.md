@@ -45,8 +45,7 @@ sudo ldconfig
 ```bash
 export PATH=/usr/local/openssl/bin:$PATH
 ```
-You can add this line to your `~/.bashrc` or `~/.profile` file to
-have it configured automatically each time you open a new terminal
+You can add this line to your `~/.bashrc` or `~/.profile` file to have it configured automatically each time you open a new terminal.
 
 ### Verification
 ```bash
@@ -56,7 +55,7 @@ openssl version
 
 ## 🔄 CPA-Secure ML-KEM Implementation
 
-OpenSSL uses a CCA-secure MLKEM implementation based on the FIPS 203 standard. To test with the CPA-secure version:
+OpenSSL uses a CCA-secure ML-KEM implementation based on the FIPS 203 standard. To test with the CPA-secure version:
 
 1. **Backup** the original `ml_kem.c` in `/openssl-3.6.0/crypto/ml_kem/`.
 
@@ -75,6 +74,7 @@ Test raw cryptographic operations for each hybrid scheme:
 openssl speed -seconds 3 <SCHEME>
 ```
 Replace `<SCHEME>` with: `X25519MLKEM768`, `SecP256r1MLKEM768`, or `SecP384r1MLKEM1024`.
+This returns test results based on a 3-second measurement period.
 
 ### Protocol-Level Benchmarking
 
@@ -96,6 +96,7 @@ In another terminal window:
 ```bash
 openssl s_time -connect localhost:4443 -new -time 3
 ```
+This returns test results based on a 3-second measurement period.
 
 ## ⚙️ TLS Groups Configuration
 
